@@ -10,11 +10,16 @@ using System.Windows.Forms;
 
 namespace StockTacking
 {
-    public partial class Form1 : Form
+    public partial class FrmCategoryList : Form
     {
-        public Form1()
+        public FrmCategoryList()
         {
             InitializeComponent();
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

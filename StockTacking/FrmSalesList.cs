@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace StockTacking
 {
-    public partial class FrmCategoryList : Form
+    public partial class FrmSalesList : Form
     {
-        public FrmCategoryList()
+        public FrmSalesList()
         {
             InitializeComponent();
         }
@@ -22,9 +22,31 @@ namespace StockTacking
             this.Close();
         }
 
+
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtPrice_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled=General.isNumber(e);
+        }
+
+        private void txtSalesAmount_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = General.isNumber(e);
+        }
+
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            FrmCategory frm = new FrmCategory();
+            FrmSales frm = new FrmSales();
             this.Hide();
             frm.ShowDialog();
             this.Visible = true;

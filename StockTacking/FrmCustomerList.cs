@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace StockTacking
 {
-    public partial class FrmCategoryList : Form
+    public partial class FrmCustomerList : Form
     {
-        public FrmCategoryList()
+        public FrmCustomerList()
         {
             InitializeComponent();
         }
@@ -24,7 +24,7 @@ namespace StockTacking
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            FrmCategory frm = new FrmCategory();
+            FrmCustomer frm = new FrmCustomer();
             this.Hide();
             frm.ShowDialog();
             this.Visible = true;

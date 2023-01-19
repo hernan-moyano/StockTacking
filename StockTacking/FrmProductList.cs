@@ -7,11 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using StockTacking.BLL;
+using StockTacking.DAL.DTO;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+
 
 namespace StockTacking
 {
     public partial class FrmProductList : Form
     {
+        ProductBLL bll = new ProductBLL();
+        ProductDTO dto = new ProductDTO();
+
         public FrmProductList()
         {
             InitializeComponent();
@@ -24,7 +31,9 @@ namespace StockTacking
 
         private void txtPrice_KeyPress(object sender, KeyPressEventArgs e)
         {
-            e.Handled = General.isNumber(e);
+            //e.Handled = General.isNumber(e);
+            if (!General.isDecimal(e.KeyChar, txtPrice.Text))
+                e.Handled = true;
         }
 
         private void txtStock_KeyPress(object sender, KeyPressEventArgs e)
@@ -35,9 +44,90 @@ namespace StockTacking
         private void btnAdd_Click(object sender, EventArgs e)
         {
             FrmProduct frm = new FrmProduct();
+            frm.dto = dto;
             this.Hide();
             frm.ShowDialog();
             this.Visible = true;
+            //para refrescar despues de haber añadido uno nuevo
+            dto = bll.Select();
+            dataGridView1.DataSource = dto.Products;
+            //se limpian los filtros de busqueda
+            CleanFilters();
+        }  
+
+
+        private void FrmProductList_Load(object sender, EventArgs e)
+        {
+            dto = bll.Select();
+            cmbCategory.DataSource = dto.Categories;
+            cmbCategory.DisplayMember = "CategoryName";
+            cmbCategory.ValueMember = "ID";
+            cmbCategory.SelectedIndex = -1;
+            //carga de los datos del DGV
+            dataGridView1.DataSource = dto.Products;
+            dataGridView1.Columns[0].Visible = false;
+            dataGridView1.Columns[1].Visible = false;
+            dataGridView1.Columns[2].HeaderText = "Producto";
+            dataGridView1.Columns[3].HeaderText = "Categoría";
+            dataGridView1.Columns[4].HeaderText = "Stock";
+            dataGridView1.Columns[5].HeaderText = "Precio";
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            //se crea una lista temporal
+            List<ProductDetailDTO> list = dto.Products;
+            if (txtProductName.Text.Trim() != null)
+            {
+                list = list.Where(x => x.ProductName.Contains(txtProductName.Text)).ToList();
+            }
+            if (cmbCategory.SelectedIndex != -1)
+            {
+                list = list.Where(x=>x.CategoryID==Convert.ToInt32(cmbCategory.SelectedValue)).ToList();
+            }
+            if (txtPrice.Text.Trim() != "")
+            {
+                if (rbPriceEquals.Checked)
+                    list = list.Where(x => x.Price == Convert.ToDecimal(txtPrice.Text)).ToList();
+                else if (rbPriceMore.Checked)
+                    list = list.Where(x => x.Price > Convert.ToDecimal(txtPrice.Text)).ToList();
+                else if (rbPriceLess.Checked)
+                    list = list.Where(x => x.Price < Convert.ToDecimal(txtPrice.Text)).ToList();
+                else
+                    MessageBox.Show("Por favor, selecciona un criterio para filtrar el precio");
+            }
+            if (txtStock.Text.Trim() != "")
+            {
+                if (rbStockEquals.Checked)
+                    list = list.Where(x => x.StockAmount == Convert.ToInt32(txtStock.Text)).ToList();
+                else if (rbStockMore.Checked)
+                    list = list.Where(x => x.StockAmount > Convert.ToInt32(txtStock.Text)).ToList();
+                else if (rbStockLess.Checked)
+                    list = list.Where(x => x.StockAmount < Convert.ToInt32(txtStock.Text)).ToList();
+                else
+                    MessageBox.Show("Por favor, selecciona un criterio para filtrar el stock");
+            }
+            dataGridView1.DataSource = list;
+        }
+
+        private void btnClean_Click(object sender, EventArgs e)
+        {
+            CleanFilters();
+        }
+
+        private void CleanFilters()
+        {
+            txtProductName.Clear();
+            cmbCategory.SelectedIndex = -1;
+            txtPrice.Clear();
+            rbPriceEquals.Checked = false;
+            rbPriceMore.Checked = false;
+            rbPriceLess.Checked = false;
+            txtStock.Clear();
+            rbStockEquals.Checked = false;
+            rbStockMore.Checked = false;
+            rbStockLess.Checked = false;
+            dataGridView1.DataSource = dto.Products;
         }
     }
 }

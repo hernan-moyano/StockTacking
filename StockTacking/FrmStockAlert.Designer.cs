@@ -77,6 +77,7 @@
             this.Name = "FrmStockAlert";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Alerta de Stock";
+            this.Load += new System.EventHandler(this.FrmStockAlert_Load);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);

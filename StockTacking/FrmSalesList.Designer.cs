@@ -102,6 +102,7 @@
             this.btnClean.TabIndex = 10;
             this.btnClean.Text = "Limpiar";
             this.btnClean.UseVisualStyleBackColor = true;
+            this.btnClean.Click += new System.EventHandler(this.btnClean_Click);
             // 
             // btnSearch
             // 
@@ -111,6 +112,7 @@
             this.btnSearch.TabIndex = 9;
             this.btnSearch.Text = "Buscar";
             this.btnSearch.UseVisualStyleBackColor = true;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
             // chDate
             // 
@@ -400,6 +402,7 @@
             this.Controls.Add(this.panel1);
             this.Name = "FrmSalesList";
             this.Text = "Listado de Ventas";
+            this.Load += new System.EventHandler(this.FrmSalesList_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.groupBox2.ResumeLayout(false);

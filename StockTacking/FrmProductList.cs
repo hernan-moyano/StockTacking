@@ -129,5 +129,7 @@ namespace StockTacking
             rbStockLess.Checked = false;
             dataGridView1.DataSource = dto.Products;
         }
+
+
     }
 }

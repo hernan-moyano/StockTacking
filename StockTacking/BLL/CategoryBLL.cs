@@ -40,7 +40,10 @@ namespace StockTacking.BLL
 
         public bool Update(CategoryDetailDTO entity)
         {
-            throw new NotImplementedException();
+            CATEGORY category = new CATEGORY();
+            category.ID = entity.ID;
+            category.CategoryName = entity.CategoryName;
+            return dao.Update(category);
         }
     }
 }

@@ -38,6 +38,7 @@ namespace StockTacking
         CustomerBLL bll = new CustomerBLL();
         CustomerDTO dto = new CustomerDTO();
 
+
         private void FrmCustomerList_Load(object sender, EventArgs e)
         {
             //para obtener todos los clientes
@@ -56,6 +57,37 @@ namespace StockTacking
             //el datagrid se rellena con la lista creada
             dataGridView1.DataSource = list;
 
+        }
+
+        CustomerDetailDTO detail = new CustomerDetailDTO();
+
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            if (detail.ID == 0)
+            {
+                MessageBox.Show("Por favor selecciona un cliente de la tabla");
+            }
+            else
+            {
+                FrmCustomer frm = new FrmCustomer();
+                frm.detail = detail;
+                frm.isUpdate = true;
+                this.Hide();
+                frm.ShowDialog();
+                this.Visible = true;
+                //se conecta a la capa de negocios
+                bll = new CustomerBLL();
+                dto = bll.Select();
+                dataGridView1.DataSource = dto.Cutomers;
+            }
+        }
+
+        private void dataGridView1_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            detail = new CustomerDetailDTO();
+            detail.ID = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[0].Value);
+            detail.CustomerName = (string)dataGridView1.Rows[e.RowIndex].Cells[1].Value;
         }
     }
 }

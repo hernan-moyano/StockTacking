@@ -26,20 +26,52 @@ namespace StockTacking
 
         //para referenciar a la capa de negocio
         CategoryBLL bll = new CategoryBLL();
+        //para cuando se actualiza una categoría
+        public CategoryDetailDTO detail = new CategoryDetailDTO();
+        public bool isUpdate = false;
 
         private void btnSave_Click(object sender, EventArgs e)
         {
             if (txtCategoryName.Text.Trim() == "")
                 MessageBox.Show("El nombre de la categoría esta vacio");
             else
-            {
-                CategoryDetailDTO category = new CategoryDetailDTO();
-                category.CategoryName = txtCategoryName.Text;
-                if(bll.Insert(category))
+            {   //para añadir nuevo
+                if (!isUpdate) 
                 {
-                    MessageBox.Show("La categoría se ha añadido correctamente");
-                    txtCategoryName.Clear();
+                    CategoryDetailDTO category = new CategoryDetailDTO();
+                    category.CategoryName = txtCategoryName.Text;
+                    if (bll.Insert(category))
+                    {
+                        MessageBox.Show("La categoría se ha añadido correctamente");
+                        txtCategoryName.Clear();
+                    }
                 }
+                else if (isUpdate)
+                {
+                    //en caso de que no haga cambios en el texto
+                    if (detail.CategoryName== txtCategoryName.Text.Trim())
+                    {
+                        MessageBox.Show("No se realizo ningún cambio");
+                    }
+                    //en caso de actualizar
+                    else
+                    {
+                        detail.CategoryName = txtCategoryName.Text;
+                        if (bll.Update(detail))
+                        {
+                            MessageBox.Show("La categoría fue actualizada");
+                            this.Close();
+                        }
+                    }
+                }
+            }
+        }
+
+        private void FrmCategory_Load(object sender, EventArgs e)
+        {
+            if (isUpdate)
+            {
+                txtCategoryName.Text = detail.CategoryName;
             }
         }
     }

@@ -55,5 +55,34 @@ namespace StockTacking
             //muestra en el dataGridView los resultados encontrados
             dataGridView1.DataSource = list;
         }
+
+        CategoryDetailDTO detail = new CategoryDetailDTO();
+        private void dataGridView1_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            detail= new CategoryDetailDTO();
+            detail.ID = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[0].Value);
+            detail.CategoryName = (string)dataGridView1.Rows[e.RowIndex].Cells[1].Value;
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            if (detail.ID==0)
+            {
+                MessageBox.Show("Por favor selecciona una categoría de la tabla");
+            }
+            else
+            {
+                FrmCategory frm = new FrmCategory();
+                frm.detail = detail;
+                frm.isUpdate = true;
+                this.Hide();
+                frm.ShowDialog();
+                this.Visible = true;
+                //se conecta a la capa de negocios
+                bll = new CategoryBLL();
+                dto = bll.Select();
+                dataGridView1.DataSource = dto.Categories;
+            }
+        }
     }
 }

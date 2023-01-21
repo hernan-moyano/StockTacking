@@ -32,13 +32,43 @@ namespace StockTacking
                 MessageBox.Show("El nombre del cliente esta vacio");
             else
             {
-                CustomerDetailDTO customer = new CustomerDetailDTO();
-                customer.CustomerName = txtCustomerName.Text;
-                if (bll.Insert(customer))
+                if (!isUpdate)
                 {
-                    MessageBox.Show("El cliente se ha añadido correctamente");
-                    txtCustomerName.Clear();
+                    CustomerDetailDTO customer = new CustomerDetailDTO();
+                    customer.CustomerName = txtCustomerName.Text;
+                    if (bll.Insert(customer))
+                    {
+                        MessageBox.Show("El cliente se ha añadido correctamente");
+                        txtCustomerName.Clear();
+                    }
                 }
+                else
+                {
+                    if (detail.CustomerName== txtCustomerName.Text)
+                    {
+                        MessageBox.Show("No hubo cambios en el nombre");
+                    }
+                    else
+                    {
+                        detail.CustomerName = txtCustomerName.Text;
+                        if (bll.Update(detail))
+                        {
+                            MessageBox.Show("El cliente se ha actualizado correctamente");
+                            this.Close();
+                        }
+                    }
+                }
+            }
+
+        }
+
+        public CustomerDetailDTO detail = new CustomerDetailDTO();
+        public bool isUpdate = false;
+        private void FrmCustomer_Load(object sender, EventArgs e)
+        {
+            if (isUpdate)
+            {
+                txtCustomerName.Text = detail.CustomerName;
             }
         }
     }

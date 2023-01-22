@@ -81,9 +81,15 @@ namespace StockTacking.DAL.DAO
                 PRODUCT product = db.PRODUCTs.First(x => x.ID == entity.ID);
                 if (entity.CategoryID == 0)
                 {
-                    product.StockAmount = entity.StockAmount;
-                    db.SaveChanges();
+                    product.StockAmount = entity.StockAmount;    
                 }
+                else
+                {
+                    product.ProductName = entity.ProductName;
+                    product.Price = entity.Price;
+                    product.CategoryID = entity.CategoryID;
+                }
+                db.SaveChanges();
                 return true;
             }
             catch (Exception ex)

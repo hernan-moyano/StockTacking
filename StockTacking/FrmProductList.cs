@@ -53,7 +53,7 @@ namespace StockTacking
             dataGridView1.DataSource = dto.Products;
             //se limpian los filtros de busqueda
             CleanFilters();
-        }  
+        }
 
 
         private void FrmProductList_Load(object sender, EventArgs e)
@@ -83,7 +83,7 @@ namespace StockTacking
             }
             if (cmbCategory.SelectedIndex != -1)
             {
-                list = list.Where(x=>x.CategoryID==Convert.ToInt32(cmbCategory.SelectedValue)).ToList();
+                list = list.Where(x => x.CategoryID == Convert.ToInt32(cmbCategory.SelectedValue)).ToList();
             }
             if (txtPrice.Text.Trim() != "")
             {
@@ -130,6 +130,39 @@ namespace StockTacking
             dataGridView1.DataSource = dto.Products;
         }
 
+        public ProductDetailDTO detail = new ProductDetailDTO();
 
+        private void dataGridView1_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            detail = new ProductDetailDTO();
+            detail.ProductID = (int)dataGridView1.Rows[e.RowIndex].Cells[0].Value;
+            detail.CategoryID = (int)dataGridView1.Rows[e.RowIndex].Cells[1].Value;
+            detail.ProductName = dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString();
+            //detail.CategoryName = dataGridView1.Rows[e.RowIndex].Cells[3].Value.ToString();
+            //detail.StockAmount = (int)dataGridView1.Rows[e.RowIndex].Cells[4].Value;
+            detail.Price = (decimal)dataGridView1.Rows[e.RowIndex].Cells[5].Value;
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            if (detail.ProductID == 0)
+            {
+                MessageBox.Show("Por favor selecciona un producto de la tabla");
+            }
+            else
+            {
+                FrmProduct frm = new FrmProduct();
+                frm.detail = detail;
+                frm.isUpdate = true;
+                this.Hide();
+                frm.ShowDialog();
+                this.Visible = true;
+                //se conecta a la capa de negocios
+                bll = new ProductBLL();
+                dto = bll.Select();
+                dataGridView1.DataSource = dto.Products;
+                CleanFilters();
+            }
+        }
     }
 }

@@ -44,17 +44,18 @@ namespace StockTacking.DAL.DAO
                             join p in db.PRODUCTs on s.ProductID equals p.ID
                             join c in db.CUSTOMERs on s.CustomerID equals c.ID
                             join cat in db.CATEGORies on s.CategoryID equals cat.ID
-                            select new{
-                            productname = p.ProductName,
-                            customername = c.CustomerName,
-                            categoryname = cat.CategoryName,
-                            productID= s.ProductID,
-                            customerID = s.CustomerID,
-                            salesID = s.ID,
-                            categoryID= s.CategoryID,
-                            salesprice = s.ProductSalesPrice,
-                            salesamoun= s.ProductSalesAmount,
-                            salesdate=s.SalesDate
+                            select new
+                            {
+                                productname = p.ProductName,
+                                customername = c.CustomerName,
+                                categoryname = cat.CategoryName,
+                                productID = s.ProductID,
+                                customerID = s.CustomerID,
+                                salesID = s.ID,
+                                categoryID = s.CategoryID,
+                                salesprice = s.ProductSalesPrice,
+                                salesamoun = s.ProductSalesAmount,
+                                salesdate = s.SalesDate
                             }).OrderByDescending(x => x.salesdate).ToList();
                 foreach (var item in list)
                 {
@@ -82,7 +83,21 @@ namespace StockTacking.DAL.DAO
 
         public bool Update(SALE entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                SALE sales = db.SALES.First(x => x.ID == entity.ID);
+                if (entity.ID == 0)
+                {
+                    sales.ProductSalesAmount = entity.ProductSalesAmount;
+                    db.SaveChanges();                    
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
     }
 }

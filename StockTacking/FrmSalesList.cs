@@ -31,10 +31,6 @@ namespace StockTacking
 
         }
 
-        private void btnUpdate_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void txtPrice_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -62,6 +58,8 @@ namespace StockTacking
 
         SalesBLL bll = new SalesBLL();
         SalesDTO dto = new SalesDTO();
+        SalesDetailDTO detail = new SalesDetailDTO();
+
 
         private void FrmSalesList_Load(object sender, EventArgs e)
         {
@@ -156,6 +154,39 @@ namespace StockTacking
             dpStart.Value = DateTime.Today;
             dpEnd.Value = DateTime.Today;
             dataGridView1.DataSource = dto.Sales;
+        }
+
+        private void dataGridView1_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            detail = new SalesDetailDTO();          
+            detail.CustomerName = (string)dataGridView1.Rows[e.RowIndex].Cells[0].Value;
+            detail.ProductName = (string)dataGridView1.Rows[e.RowIndex].Cells[1].Value;
+            detail.ProductID = (int)dataGridView1.Rows[e.RowIndex].Cells[4].Value;
+            detail.SalesAmount = (int)dataGridView1.Rows[e.RowIndex].Cells[6].Value;
+            detail.Price = (decimal)dataGridView1.Rows[e.RowIndex].Cells[7].Value;
+            detail.SalesID = (int)dataGridView1.Rows[e.RowIndex].Cells[10].Value;
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            if (detail.SalesID ==0)
+            {
+                MessageBox.Show("Por favor selecciona una venta de la tabla");
+            }
+            else
+            {
+                FrmSales frm = new FrmSales();
+                frm.detail = detail;
+                frm.isUpdate = true;
+                this.Hide();
+                frm.ShowDialog();
+                this.Visible = true;
+                //se conecta a la capa de negocios
+                bll = new SalesBLL();
+                dto = bll.Select();
+                dataGridView1.DataSource = dto.Sales;
+                CleanFilters();
+            }
         }
     }
 }

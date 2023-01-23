@@ -13,10 +13,18 @@ namespace StockTacking.BLL
     public class CategoryBLL : IBLL<CategoryDetailDTO, CategoryDTO>
     {
         CategoryDAO dao= new CategoryDAO();
+        ProductDAO productdao = new ProductDAO();
 
         public bool Delete(CategoryDetailDTO entity)
         {
-            throw new NotImplementedException();
+            CATEGORY category = new CATEGORY();
+            category.ID = entity.ID;
+            dao.Delete(category);
+
+            PRODUCT product = new PRODUCT();
+            product.CategoryID = entity.ID;
+            productdao.Delete(product);
+            return true;
         }
 
         public bool GetBack(int ID)

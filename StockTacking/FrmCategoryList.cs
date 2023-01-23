@@ -84,5 +84,28 @@ namespace StockTacking
                 dataGridView1.DataSource = dto.Categories;
             }
         }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (detail.ID == 0)
+            {
+                MessageBox.Show("Por favor selecciona una categoría de la tabla");
+            }
+            else
+            {
+                DialogResult result = MessageBox.Show("¿Esta seguro que desea borrarla?", "Advertencia", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    if (bll.Delete(detail))
+                    {
+                        MessageBox.Show("La categoría se borro exitosamente");
+                        bll = new CategoryBLL();
+                        dto = bll.Select();
+                        dataGridView1.DataSource = dto.Categories;
+                        txtCategoryName.Clear();
+                    }
+                }
+            }
+        }
     }
 }

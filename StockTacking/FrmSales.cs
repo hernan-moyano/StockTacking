@@ -67,12 +67,22 @@ namespace StockTacking
             else
             {
                 panel1.Hide();
-                txtCustomerName.Text = detail.CustomerName;
-                txtProductName.Text = detail.ProductName;
-                txtPrice.Text = detail.Price.ToString();
-                txtProductSalesAmount.Text = detail.SalesAmount.ToString();
+                try
+                {
+                    txtCustomerName.Text = detail.CustomerName;
+                    txtProductName.Text = detail.ProductName;
+                    txtPrice.Text = detail.Price.ToString();
+                    txtProductSalesAmount.Text = detail.SalesAmount.ToString();
+                    //para obtener la cantidad del producto
 
-                txtStock.Text = detail.StockAmount.ToString();
+                    txtStock.Text = detail.StockAmount.ToString();
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+
             }
         }
 

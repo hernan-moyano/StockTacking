@@ -13,7 +13,39 @@ namespace StockTacking.DAL.DAO
     {
         public bool Delete(PRODUCT entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (entity.ID != 0)
+                {
+                    PRODUCT product = db.PRODUCTs.First(x => x.ID == entity.ID);
+                    product.isDeleted = true;
+                    product.DeletedDate = DateTime.Today;
+                    db.SaveChanges();                    
+                }
+                else if (entity.CategoryID != 0)
+                {
+                    List<PRODUCT> list = db.PRODUCTs.Where(x => x.CategoryID == entity.CategoryID).ToList();
+                    foreach (var item in list)
+                    {
+                        item.isDeleted = true;
+                        item.DeletedDate = DateTime.Now;
+                        List<SALE> sales = db.SALES.Where(x => x.ProductID == entity.ID).ToList();
+                        foreach (var sale in sales)
+                        {
+                            sale.isDeleted = true;
+                            sale.DeletedDate = DateTime.Now;                            
+                        }
+                        db.SaveChanges();
+                    }
+                    db.SaveChanges();
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         public bool GetBack(int ID)
@@ -41,7 +73,7 @@ namespace StockTacking.DAL.DAO
             try
             {
                 List<ProductDetailDTO> products = new List<ProductDetailDTO>();
-                var list = (from p in db.PRODUCTs
+                var list = (from p in db.PRODUCTs.Where(x => x.isDeleted==false)
                             join c in db.CATEGORies
                             on p.CategoryID equals c.ID
                             select new

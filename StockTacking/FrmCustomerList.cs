@@ -89,5 +89,28 @@ namespace StockTacking
             detail.ID = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[0].Value);
             detail.CustomerName = (string)dataGridView1.Rows[e.RowIndex].Cells[1].Value;
         }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (detail.ID == 0)
+            {
+                MessageBox.Show("Por favor selecciona un cliente de la tabla");
+            }
+            else
+            {
+                DialogResult result = MessageBox.Show("¿Esta seguro que desea borrarlo?", "Advertencia", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    if (bll.Delete(detail))
+                    {
+                        MessageBox.Show("El cliente se borro exitosamente");
+                        bll = new CustomerBLL();
+                        dto = bll.Select();
+                        dataGridView1.DataSource = dto.Cutomers;
+                        txtCustomerName.Clear();
+                    }
+                }
+            }
+        }
     }
 }

@@ -164,5 +164,29 @@ namespace StockTacking
                 CleanFilters();
             }
         }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (detail.ProductID==0)
+            {
+                MessageBox.Show("Por favor selecciona un producto de la tabla");
+            }
+            else
+            {
+                DialogResult result = MessageBox.Show("¿Esta seguro que desea borrarlo?", "Advertencia", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    if (bll.Delete(detail))
+                    {
+                        MessageBox.Show("El producto se borro exitosamente");
+                        bll = new ProductBLL();
+                        dto = bll.Select();
+                        dataGridView1.DataSource = dto.Products;
+                        cmbCategory.DataSource = dto.Categories;
+                        CleanFilters();
+                    }
+                }
+            }
+        }
     }
 }

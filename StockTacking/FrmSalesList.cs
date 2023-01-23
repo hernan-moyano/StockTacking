@@ -176,16 +176,26 @@ namespace StockTacking
 
         private void dataGridView1_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
-            detail = new SalesDetailDTO();          
-            detail.CustomerName = (string)dataGridView1.Rows[e.RowIndex].Cells[0].Value;
-            detail.ProductName = (string)dataGridView1.Rows[e.RowIndex].Cells[1].Value;
-            detail.ProductID = (int)dataGridView1.Rows[e.RowIndex].Cells[4].Value;
-            detail.SalesAmount = (int)dataGridView1.Rows[e.RowIndex].Cells[6].Value;
-            detail.Price = (decimal)dataGridView1.Rows[e.RowIndex].Cells[7].Value;
-            detail.SalesID = (int)dataGridView1.Rows[e.RowIndex].Cells[10].Value;
-            //para obtener la cantidad del producto
-            ProductDetailDTO product = dto.Products.First(x => x.ProductID == detail.ProductID);
-            detail.StockAmount = product.StockAmount;
+            try
+            {
+                detail = new SalesDetailDTO();
+                detail.CustomerName = (string)dataGridView1.Rows[e.RowIndex].Cells[0].Value;
+                detail.ProductName = (string)dataGridView1.Rows[e.RowIndex].Cells[1].Value;
+                detail.ProductID = (int)dataGridView1.Rows[e.RowIndex].Cells[4].Value;
+                detail.SalesAmount = (int)dataGridView1.Rows[e.RowIndex].Cells[6].Value;
+                detail.Price = (decimal)dataGridView1.Rows[e.RowIndex].Cells[7].Value;
+                detail.SalesID = (int)dataGridView1.Rows[e.RowIndex].Cells[10].Value;
+                //todo: si se elimina la categoria del producto o el producto no puede seleccionarse el id
+                ProductDetailDTO product = dto.Products.First(x => x.ProductID == detail.ProductID);
+                detail.StockAmount = product.StockAmount;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+
         }
 
         private void btnUpdate_Click(object sender, EventArgs e)

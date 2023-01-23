@@ -11,7 +11,20 @@ namespace StockTacking.DAL.DAO
     {
         public bool Delete(CATEGORY entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                CATEGORY category = db.CATEGORies.First(x => x.ID == entity.ID);
+                category.isDeleted = true;
+                category.DeleteDate = DateTime.Today;
+                db.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
         }
 
         public bool GetBack(int ID)

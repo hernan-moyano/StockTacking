@@ -13,15 +13,51 @@ namespace StockTacking.DAL.DAO
         public bool Delete(SALE entity)
         {
             try
-            {
-                SALE sales = db.SALES.First(x => x.ID == entity.ID);
-                //si se desea borrar realmente de la base de datos seria lo siguiente:
-                //db.SALES.Remove(sales);
-                //db.SaveChanges();
-                //en éste caso solo se cancela la venta
-                sales.isDeleted = true;
-                sales.DeletedDate = DateTime.Now;
-                db.SaveChanges();
+            {   //AL ELIMINAR UNA VENTA
+                if (entity.ID != 0)
+                {
+                    SALE sales = db.SALES.First(x => x.ID == entity.ID);
+                    //si se desea borrar realmente de la base de datos seria lo siguiente:
+                    //db.SALES.Remove(sales);
+                    //db.SaveChanges();
+                    //en éste caso solo se cancela la venta
+                    sales.isDeleted = true;
+                    sales.DeletedDate = DateTime.Now;
+                    db.SaveChanges();
+                }
+                //AL ELIMINAR UN PRODUCTO
+                else if (entity.ProductID!=0)
+                {
+                    List<SALE> sales = db.SALES.Where(x=>x.ProductID==entity.ProductID).ToList();
+                    foreach (var item in sales)
+                    {
+                        item.isDeleted = true;
+                        item.DeletedDate = DateTime.Now;
+                    }
+                    db.SaveChanges();
+                }
+                //AL ELIMINAR UN CLIENTE
+                else if (entity.CustomerID != 0)
+                {
+                    List<SALE> sales = db.SALES.Where(x => x.CustomerID == entity.CustomerID).ToList();
+                    foreach (var item in sales)
+                    {
+                        item.isDeleted = true;
+                        item.DeletedDate = DateTime.Now;
+                    }
+                    db.SaveChanges();
+                }
+                //AL ELIMINAR UNA CATEGORÍA
+                //else if (entity.CategoryID != 0)
+                //{
+                //    List<SALE> sales = db.SALES.Where(x => x.CategoryID == entity.CategoryID).ToList();
+                //    foreach (var item in sales)
+                //    {
+                //        item.isDeleted = true;
+                //        item.DeletedDate = DateTime.Now;
+                //    }
+                //    db.SaveChanges();
+                //}
                 return true;
             }
             catch (Exception ex)

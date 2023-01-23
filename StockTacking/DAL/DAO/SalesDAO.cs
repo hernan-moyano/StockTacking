@@ -12,7 +12,23 @@ namespace StockTacking.DAL.DAO
     {
         public bool Delete(SALE entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                SALE sales = db.SALES.First(x => x.ID == entity.ID);
+                //si se desea borrar realmente de la base de datos seria lo siguiente:
+                //db.SALES.Remove(sales);
+                //db.SaveChanges();
+                //en éste caso solo se cancela la venta
+                sales.isDeleted = true;
+                sales.DeletedDate = DateTime.Now;
+                db.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         public bool GetBack(int ID)
@@ -40,12 +56,12 @@ namespace StockTacking.DAL.DAO
             try
             {
                 List<SalesDetailDTO> sales = new List<SalesDetailDTO>();
-                var list = (from s in db.SALES
+                var list = (from s in db.SALES.Where(x=>x.isDeleted == false)
                             join p in db.PRODUCTs on s.ProductID equals p.ID
                             join c in db.CUSTOMERs on s.CustomerID equals c.ID
                             join cat in db.CATEGORies on s.CategoryID equals cat.ID
                             select new
-                            {
+                            {                                
                                 productname = p.ProductName,
                                 customername = c.CustomerName,
                                 categoryname = cat.CategoryName,
@@ -54,7 +70,8 @@ namespace StockTacking.DAL.DAO
                                 salesID = s.ID,
                                 categoryID = s.CategoryID,
                                 salesprice = s.ProductSalesPrice,
-                                salesamoun = s.ProductSalesAmount,
+                                salesamount = s.ProductSalesAmount,
+                                stockamount = p.StockAmount,
                                 salesdate = s.SalesDate
                             }).OrderByDescending(x => x.salesdate).ToList();
                 foreach (var item in list)
@@ -68,8 +85,9 @@ namespace StockTacking.DAL.DAO
                     dto.SalesID = item.salesID;
                     dto.CategoryID = item.categoryID;
                     dto.Price = item.salesprice;
-                    dto.SalesAmount = item.salesamoun;
+                    dto.SalesAmount = item.salesamount;
                     dto.SalesDate = item.salesdate;
+                    dto.StockAmount = item.stockamount;
                     sales.Add(dto);
                 }
                 return sales;
@@ -86,11 +104,8 @@ namespace StockTacking.DAL.DAO
             try
             {
                 SALE sales = db.SALES.First(x => x.ID == entity.ID);
-                if (entity.ID == 0)
-                {
-                    sales.ProductSalesAmount = entity.ProductSalesAmount;
-                    db.SaveChanges();                    
-                }
+                sales.ProductSalesAmount = entity.ProductSalesAmount;
+                db.SaveChanges();
                 return true;
             }
             catch (Exception ex)

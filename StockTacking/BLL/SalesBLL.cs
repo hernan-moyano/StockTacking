@@ -19,7 +19,15 @@ namespace StockTacking.BLL
 
         public bool Delete(SalesDetailDTO entity)
         {
-            throw new NotImplementedException();
+            SALE sales = new SALE();
+            sales.ID = entity.SalesID;
+            dao.Delete(sales);
+            //para corregir la venta y el producto una vez cancelada
+            PRODUCT product = new PRODUCT();
+            product.ID = entity.ProductID;
+            product.StockAmount = entity.StockAmount + entity.SalesAmount;
+            productdao.Update(product);
+            return true;
         }
 
         public bool GetBack(int ID)
@@ -63,6 +71,7 @@ namespace StockTacking.BLL
             sales.ID = entity.SalesID;
             sales.ProductSalesAmount = entity.SalesAmount;
             dao.Update(sales);
+
             PRODUCT product = new PRODUCT();
             product.ID = entity.ProductID;
             product.StockAmount = entity.StockAmount;

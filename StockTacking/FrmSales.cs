@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using StockTacking.BLL;
 using StockTacking.DAL;
+using StockTacking.DAL.DAO;
 using StockTacking.DAL.DTO;
 
 namespace StockTacking
@@ -33,7 +34,7 @@ namespace StockTacking
         SalesBLL bll = new SalesBLL();
         public SalesDTO dto = new SalesDTO();
         public SalesDetailDTO detail = new SalesDetailDTO();
-        public ProductDetailDTO product = new ProductDetailDTO();
+        
         bool comboFull = false;
         public bool isUpdate = false;
 
@@ -67,13 +68,11 @@ namespace StockTacking
             {
                 panel1.Hide();
                 txtCustomerName.Text = detail.CustomerName;
-                txtProductName.Text = detail.CustomerName;
+                txtProductName.Text = detail.ProductName;
                 txtPrice.Text = detail.Price.ToString();
                 txtProductSalesAmount.Text = detail.SalesAmount.ToString();
-                //todo: ver consulta de LINQ
-                //producto = dto.Products.First(x => x.ProductID == detail.ProductID);
-                //detail.StockAmount = producto.StockAmount;
-                //txtStock.Text = detail.StockAmount.ToString();
+
+                txtStock.Text = detail.StockAmount.ToString();
             }
         }
 
@@ -110,7 +109,7 @@ namespace StockTacking
 
 
         private void gridProduct_RowEnter(object sender, DataGridViewCellEventArgs e)
-        {   //se obtienen los valores de la tabla     
+        {   //se obtienen los valores de la tabla            
             detail.ProductID = (int)gridProduct.Rows[e.RowIndex].Cells[0].Value;
             detail.CategoryID = (int)gridProduct.Rows[e.RowIndex].Cells[1].Value;
             detail.ProductName = (string)gridProduct.Rows[e.RowIndex].Cells[2].Value;

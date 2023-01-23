@@ -28,7 +28,25 @@ namespace StockTacking
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-
+            if (detail.SalesID == 0)
+            {
+                MessageBox.Show("Por favor selecciona una venta de la tabla");
+            }
+            else
+            {
+                DialogResult result = MessageBox.Show("¿Esta seguro que desea borrarla?","Advertencia",MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    if (bll.Delete(detail))
+                    {
+                        MessageBox.Show("La venta se borro exitosamente");
+                        bll = new SalesBLL();
+                        dto = bll.Select();
+                        dataGridView1.DataSource= dto.Sales;
+                        CleanFilters();
+                    }
+                }
+            }
         }
 
 
@@ -165,6 +183,9 @@ namespace StockTacking
             detail.SalesAmount = (int)dataGridView1.Rows[e.RowIndex].Cells[6].Value;
             detail.Price = (decimal)dataGridView1.Rows[e.RowIndex].Cells[7].Value;
             detail.SalesID = (int)dataGridView1.Rows[e.RowIndex].Cells[10].Value;
+            //para obtener la cantidad del producto
+            ProductDetailDTO product = dto.Products.First(x => x.ProductID == detail.ProductID);
+            detail.StockAmount = product.StockAmount;
         }
 
         private void btnUpdate_Click(object sender, EventArgs e)
@@ -178,6 +199,8 @@ namespace StockTacking
                 FrmSales frm = new FrmSales();
                 frm.detail = detail;
                 frm.isUpdate = true;
+                //se le pasa el dto que tiene la clase, necesario para la expresion lambda
+                frm.dto = dto;
                 this.Hide();
                 frm.ShowDialog();
                 this.Visible = true;

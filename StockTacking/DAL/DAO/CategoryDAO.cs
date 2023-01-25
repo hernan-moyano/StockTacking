@@ -29,7 +29,19 @@ namespace StockTacking.DAL.DAO
 
         public bool GetBack(int ID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                CATEGORY category = db.CATEGORies.First(x=>x.ID==ID);
+                category.isDeleted = false; 
+                category.DeleteDate = null;
+                db.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         public bool Insert(CATEGORY entity)
@@ -52,12 +64,34 @@ namespace StockTacking.DAL.DAO
             try
             {
                 List<CategoryDetailDTO> categories = new List<CategoryDetailDTO>();
-                var list = db.CATEGORies;
+                var list = db.CATEGORies.Where(x => x.isDeleted == false);
                 foreach (var category in list)
                 {
                     CategoryDetailDTO dto = new CategoryDetailDTO();
                     dto.ID = category.ID;
                     dto.CategoryName= category.CategoryName;
+                    categories.Add(dto);
+                }
+                return categories;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public List<CategoryDetailDTO> Select(bool isDeleted)
+        {
+            try
+            {
+                List<CategoryDetailDTO> categories = new List<CategoryDetailDTO>();
+                var list = db.CATEGORies.Where(x => x.isDeleted == isDeleted);
+                foreach (var category in list)
+                {
+                    CategoryDetailDTO dto = new CategoryDetailDTO();
+                    dto.ID = category.ID;
+                    dto.CategoryName = category.CategoryName;
                     categories.Add(dto);
                 }
                 return categories;

@@ -47,17 +47,7 @@ namespace StockTacking.DAL.DAO
                     }
                     db.SaveChanges();
                 }
-                //AL ELIMINAR UNA CATEGORÍA
-                //else if (entity.CategoryID != 0)
-                //{
-                //    List<SALE> sales = db.SALES.Where(x => x.CategoryID == entity.CategoryID).ToList();
-                //    foreach (var item in sales)
-                //    {
-                //        item.isDeleted = true;
-                //        item.DeletedDate = DateTime.Now;
-                //    }
-                //    db.SaveChanges();
-                //}
+
                 return true;
             }
             catch (Exception ex)
@@ -69,7 +59,19 @@ namespace StockTacking.DAL.DAO
 
         public bool GetBack(int ID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                SALE sales = db.SALES.First(x => x.ID == ID);
+                sales.isDeleted = false;
+                sales.DeletedDate = null;
+                db.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         public bool Insert(SALE entity)
@@ -134,6 +136,62 @@ namespace StockTacking.DAL.DAO
                 throw ex;
             }
         }
+
+        public List<SalesDetailDTO> Select(bool isDeleted)
+        {
+            try
+            {
+                List<SalesDetailDTO> sales = new List<SalesDetailDTO>();
+                var list = (from s in db.SALES.Where(x => x.isDeleted == isDeleted)
+                            join p in db.PRODUCTs on s.ProductID equals p.ID
+                            join c in db.CUSTOMERs on s.CustomerID equals c.ID
+                            join cat in db.CATEGORies on s.CategoryID equals cat.ID
+                            select new
+                            {
+                                productname = p.ProductName,
+                                customername = c.CustomerName,
+                                categoryname = cat.CategoryName,
+                                productID = s.ProductID,
+                                customerID = s.CustomerID,
+                                salesID = s.ID,
+                                categoryID = s.CategoryID,
+                                salesprice = s.ProductSalesPrice,
+                                salesamount = s.ProductSalesAmount,
+                                stockamount = p.StockAmount,
+                                salesdate = s.SalesDate,
+                                categoryDeleted = cat.isDeleted,
+                                customerDeleted = c.isDeleted,
+                                productDeleted = p.isDeleted
+                            }).OrderByDescending(x => x.salesdate).ToList();
+                foreach (var item in list)
+                {
+                    SalesDetailDTO dto = new SalesDetailDTO();
+                    dto.ProductName = item.productname;
+                    dto.CustomerName = item.customername;
+                    dto.CategoryName = item.categoryname;
+                    dto.ProductID = item.productID;
+                    dto.CustomerID = item.customerID;
+                    dto.SalesID = item.salesID;
+                    dto.CategoryID = item.categoryID;
+                    dto.Price = item.salesprice;
+                    dto.SalesAmount = item.salesamount;
+                    dto.SalesDate = item.salesdate;
+                    dto.StockAmount = item.stockamount;
+
+                    dto.isCategoryDeleted = item.categoryDeleted;
+                    dto.isCustomerDeleted = item.customerDeleted;
+                    dto.isProductDeleted = item.productDeleted;
+                    sales.Add(dto);
+                }
+                return sales;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
 
         public bool Update(SALE entity)
         {

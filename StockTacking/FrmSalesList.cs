@@ -19,66 +19,34 @@ namespace StockTacking
             InitializeComponent();
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-
-
-        private void btnDelete_Click(object sender, EventArgs e)
-        {
-            if (detail.SalesID == 0)
-            {
-                MessageBox.Show("Por favor selecciona una venta de la tabla");
-            }
-            else
-            {
-                DialogResult result = MessageBox.Show("¿Esta seguro que desea borrarla?","Advertencia",MessageBoxButtons.YesNo);
-                if (result == DialogResult.Yes)
-                {
-                    if (bll.Delete(detail))
-                    {
-                        MessageBox.Show("La venta se borro exitosamente");
-                        bll = new SalesBLL();
-                        dto = bll.Select();
-                        dataGridView1.DataSource= dto.Sales;
-                        CleanFilters();
-                    }
-                }
-            }
-        }
-
-
-        private void txtPrice_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (!General.isDecimal(e.KeyChar, txtPrice.Text))
-                e.Handled = true;
-        }
-
-        private void txtSalesAmount_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = General.isNumber(e);
-        }
-
-        private void btnAdd_Click(object sender, EventArgs e)
-        {
-            FrmSales frm = new FrmSales();
-            frm.dto = dto;
-            this.Hide();
-            frm.ShowDialog();
-            this.Visible = true;
-            //para actualizar y limpiar filtros
-            dto = bll.Select();
-            dataGridView1.DataSource = dto.Sales;
-            CleanFilters();
-        }
-
+        #region Propiedades
         SalesBLL bll = new SalesBLL();
         SalesDTO dto = new SalesDTO();
         SalesDetailDTO detail = new SalesDetailDTO();
+        #endregion
 
+        #region Metodos
+        private void CleanFilters()
+        {
+            txtProductName.Clear();
+            txtCustomerName.Clear();
+            cmbCategory.SelectedIndex = -1;
+            txtPrice.Clear();
+            txtSalesAmount.Clear();
+            rbPriceEquals.Checked = false;
+            rbPriceMore.Checked = false;
+            rbPriceLess.Checked = false;
+            rbSaleEquals.Checked = false;
+            rbSaleMore.Checked = false;
+            rbSaleLess.Checked = false;
+            chDate.Checked = false;
+            dpStart.Value = DateTime.Today;
+            dpEnd.Value = DateTime.Today;
+            dataGridView1.DataSource = dto.Sales;
+        }
+        #endregion
 
+        #region Eventos
         private void FrmSalesList_Load(object sender, EventArgs e)
         {
             dto = bll.Select();
@@ -99,6 +67,9 @@ namespace StockTacking
             dataGridView1.Columns[8].HeaderText = "Fecha de venta";
             dataGridView1.Columns[9].Visible = false;
             dataGridView1.Columns[10].Visible = false;
+            dataGridView1.Columns[11].Visible = false;
+            dataGridView1.Columns[12].Visible = false;
+            dataGridView1.Columns[13].Visible = false;
 
         }
 
@@ -155,23 +126,15 @@ namespace StockTacking
             CleanFilters();
         }
 
-        private void CleanFilters()
+        private void txtPrice_KeyPress(object sender, KeyPressEventArgs e)
         {
-            txtProductName.Clear();
-            txtCustomerName.Clear();
-            cmbCategory.SelectedIndex = -1;
-            txtPrice.Clear();
-            txtSalesAmount.Clear();
-            rbPriceEquals.Checked = false;
-            rbPriceMore.Checked = false;
-            rbPriceLess.Checked = false;
-            rbSaleEquals.Checked = false;
-            rbSaleMore.Checked = false;
-            rbSaleLess.Checked = false;
-            chDate.Checked = false;
-            dpStart.Value = DateTime.Today;
-            dpEnd.Value = DateTime.Today;
-            dataGridView1.DataSource = dto.Sales;
+            if (!General.isDecimal(e.KeyChar, txtPrice.Text))
+                e.Handled = true;
+        }
+
+        private void txtSalesAmount_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = General.isNumber(e);
         }
 
         private void dataGridView1_RowEnter(object sender, DataGridViewCellEventArgs e)
@@ -185,22 +148,33 @@ namespace StockTacking
                 detail.SalesAmount = (int)dataGridView1.Rows[e.RowIndex].Cells[6].Value;
                 detail.Price = (decimal)dataGridView1.Rows[e.RowIndex].Cells[7].Value;
                 detail.SalesID = (int)dataGridView1.Rows[e.RowIndex].Cells[10].Value;
-                //todo: si se elimina la categoria del producto o el producto no puede seleccionarse el id
-                ProductDetailDTO product = dto.Products.First(x => x.ProductID == detail.ProductID);
-                detail.StockAmount = product.StockAmount;
+
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.Message, "Nota", MessageBoxButtons.OK);
 
-                throw ex;
             }
 
 
         }
 
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            FrmSales frm = new FrmSales();
+            frm.dto = dto;
+            this.Hide();
+            frm.ShowDialog();
+            this.Visible = true;
+            //para actualizar y limpiar filtros
+            dto = bll.Select();
+            dataGridView1.DataSource = dto.Sales;
+            CleanFilters();
+        }
+
         private void btnUpdate_Click(object sender, EventArgs e)
         {
-            if (detail.SalesID ==0)
+            if (detail.SalesID == 0)
             {
                 MessageBox.Show("Por favor selecciona una venta de la tabla");
             }
@@ -221,5 +195,34 @@ namespace StockTacking
                 CleanFilters();
             }
         }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (detail.SalesID == 0)
+            {
+                MessageBox.Show("Por favor selecciona una venta de la tabla");
+            }
+            else
+            {
+                DialogResult result = MessageBox.Show("¿Esta seguro que desea borrarla?", "Advertencia", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    if (bll.Delete(detail))
+                    {
+                        MessageBox.Show("La venta se borro exitosamente");
+                        bll = new SalesBLL();
+                        dto = bll.Select();
+                        dataGridView1.DataSource = dto.Sales;
+                        CleanFilters();
+                    }
+                }
+            }
+        }
+        #endregion
     }
 }

@@ -10,8 +10,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using StockTacking.BLL;
-using StockTacking.DAL.DTO;
 using StockTacking.DAL;
 
 namespace StockTacking
@@ -23,22 +21,14 @@ namespace StockTacking
             InitializeComponent();
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        private void txtPrice_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (!General.isDecimal(e.KeyChar, txtPrice.Text))
-                e.Handled = true;
-        }
-
+        #region Propiedades
         public ProductBLL bll = new ProductBLL();
         public ProductDTO dto = new ProductDTO();
         public ProductDetailDTO detail = new ProductDetailDTO();
         public bool isUpdate = false;
+        #endregion
 
+        #region Eventos
         private void FrmProduct_Load(object sender, EventArgs e)
         {
             dto = bll.Select();
@@ -54,6 +44,12 @@ namespace StockTacking
             }
         }
 
+        private void txtPrice_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!General.isDecimal(e.KeyChar, txtPrice.Text))
+                e.Handled = true;
+        }
+
         private void btnSave_Click(object sender, EventArgs e)
         {
             if (txtProductName.Text.Trim() == "")
@@ -65,7 +61,7 @@ namespace StockTacking
             else if (txtPrice.Text.Trim() == "")
             {
                 MessageBox.Show("Debe completar el precio");
-            }  
+            }
             else
             {
                 //para agregar
@@ -86,7 +82,7 @@ namespace StockTacking
                 }//para actualizar
                 else
                 {
-                    if (detail.ProductName == txtProductName.Text && 
+                    if (detail.ProductName == txtProductName.Text &&
                         detail.CategoryID == Convert.ToInt32(cmbCategory.SelectedValue) &&
                         detail.Price == Convert.ToDecimal(txtPrice.Text))
                     {
@@ -97,17 +93,23 @@ namespace StockTacking
                         detail.ProductName = txtProductName.Text;
                         detail.CategoryID = Convert.ToInt32(cmbCategory.SelectedValue);
                         detail.Price = Convert.ToDecimal(txtPrice.Text);
-                    {
+                        {
 
                             if (bll.Update(detail))
-                        {
-                            MessageBox.Show("El producto fue actualizado");
-                            this.Close();
+                            {
+                                MessageBox.Show("El producto fue actualizado");
+                                this.Close();
+                            }
                         }
                     }
                 }
             }
         }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        #endregion
     }
-}
 }

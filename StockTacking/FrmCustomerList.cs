@@ -19,31 +19,18 @@ namespace StockTacking
             InitializeComponent();
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        private void btnAdd_Click(object sender, EventArgs e)
-        {
-            FrmCustomer frm = new FrmCustomer();
-            this.Hide();
-            frm.ShowDialog();
-            this.Visible = true;
-            //se actualiza la lista
-            dto = bll.Select();
-            dataGridView1.DataSource = dto.Cutomers;
-        }
-
+        #region Propiedades
         CustomerBLL bll = new CustomerBLL();
         CustomerDTO dto = new CustomerDTO();
+        CustomerDetailDTO detail = new CustomerDetailDTO();
+        #endregion
 
-
+        #region Eventos
         private void FrmCustomerList_Load(object sender, EventArgs e)
         {
             //para obtener todos los clientes
             dto = bll.Select();
-            dataGridView1.DataSource= dto.Cutomers;
+            dataGridView1.DataSource = dto.Cutomers;
             dataGridView1.Columns[0].Visible = false;
             dataGridView1.Columns[1].HeaderText = "Nombre del cliente";
         }
@@ -59,9 +46,24 @@ namespace StockTacking
 
         }
 
-        CustomerDetailDTO detail = new CustomerDetailDTO();
-
-
+        private void dataGridView1_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            detail = new CustomerDetailDTO();
+            detail.ID = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[0].Value);
+            detail.CustomerName = (string)dataGridView1.Rows[e.RowIndex].Cells[1].Value;
+        }
+        
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            FrmCustomer frm = new FrmCustomer();
+            this.Hide();
+            frm.ShowDialog();
+            this.Visible = true;
+            //se actualiza la lista
+            dto = bll.Select();
+            dataGridView1.DataSource = dto.Cutomers;
+        }
+        
         private void btnUpdate_Click(object sender, EventArgs e)
         {
             if (detail.ID == 0)
@@ -82,14 +84,7 @@ namespace StockTacking
                 dataGridView1.DataSource = dto.Cutomers;
             }
         }
-
-        private void dataGridView1_RowEnter(object sender, DataGridViewCellEventArgs e)
-        {
-            detail = new CustomerDetailDTO();
-            detail.ID = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[0].Value);
-            detail.CustomerName = (string)dataGridView1.Rows[e.RowIndex].Cells[1].Value;
-        }
-
+        
         private void btnDelete_Click(object sender, EventArgs e)
         {
             if (detail.ID == 0)
@@ -112,5 +107,11 @@ namespace StockTacking
                 }
             }
         }
+        
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        #endregion
     }
 }

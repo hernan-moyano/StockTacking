@@ -19,12 +19,21 @@ namespace StockTacking
             InitializeComponent();
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
+        #region Propiedades
         //para acceder a la capa de negocio
         CustomerBLL bll = new CustomerBLL();
+        public CustomerDetailDTO detail = new CustomerDetailDTO();
+        public bool isUpdate = false;
+        #endregion
+
+        #region Eventos
+        private void FrmCustomer_Load(object sender, EventArgs e)
+        {
+            if (isUpdate)
+            {
+                txtCustomerName.Text = detail.CustomerName;
+            }
+        }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
@@ -44,7 +53,7 @@ namespace StockTacking
                 }
                 else
                 {
-                    if (detail.CustomerName== txtCustomerName.Text)
+                    if (detail.CustomerName == txtCustomerName.Text)
                     {
                         MessageBox.Show("No hubo cambios en el nombre");
                     }
@@ -62,14 +71,10 @@ namespace StockTacking
 
         }
 
-        public CustomerDetailDTO detail = new CustomerDetailDTO();
-        public bool isUpdate = false;
-        private void FrmCustomer_Load(object sender, EventArgs e)
+        private void btnClose_Click(object sender, EventArgs e)
         {
-            if (isUpdate)
-            {
-                txtCustomerName.Text = detail.CustomerName;
-            }
+            this.Close();
         }
+        #endregion
     }
 }

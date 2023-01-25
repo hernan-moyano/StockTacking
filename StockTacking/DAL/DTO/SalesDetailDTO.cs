@@ -30,5 +30,10 @@ namespace StockTacking.DAL.DTO
 
         public int SalesID { get; set; }
 
+        //variables que no estan en base de datos
+        public bool isCategoryDeleted { get; set; }
+        public bool isCustomerDeleted { get; set; }
+        public bool isProductDeleted { get; set; }
+
     }
 }

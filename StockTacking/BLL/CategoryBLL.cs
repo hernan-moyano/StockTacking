@@ -27,9 +27,9 @@ namespace StockTacking.BLL
             return true;
         }
 
-        public bool GetBack(int ID)
+        public bool GetBack(CategoryDetailDTO entity)
         {
-            throw new NotImplementedException();
+            return dao.GetBack(entity.ID);
         }
 
         public bool Insert(CategoryDetailDTO entity)

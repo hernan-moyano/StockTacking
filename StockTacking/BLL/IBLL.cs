@@ -12,6 +12,6 @@ namespace StockTacking.BLL
         bool Insert(T entity);
         bool Update(T entity);
         bool Delete(T entity);
-        bool GetBack(int ID);
+        bool GetBack(T entity);
     }
 }

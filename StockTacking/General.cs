@@ -11,6 +11,7 @@ namespace StockTacking
 {
     public class General
     {
+        #region Metodos
         public static bool isNumber(KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
@@ -18,24 +19,22 @@ namespace StockTacking
             else
                 return false;
         }
-  
+
         public static bool isDecimal(char ch, string text)
         {
             bool res = true;
             char decimalChar = Convert.ToChar(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
-
             //comprueba si es un separador decimal y si aún no tiene uno en la cadena de texto
             if (ch == decimalChar && text.IndexOf(decimalChar) != -1)
             {
                 res = false;
                 return res;
             }
-
             //comprueba si es un dígito, separador decimal y retroceso
             if (!Char.IsDigit(ch) && ch != decimalChar && ch != (char)Keys.Back)
                 res = false;
-
             return res;
         }
+        #endregion
     }
 }

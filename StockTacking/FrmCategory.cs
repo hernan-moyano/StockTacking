@@ -19,16 +19,22 @@ namespace StockTacking
             InitializeComponent();
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
+        #region Propiedades
         //para referenciar a la capa de negocio
         CategoryBLL bll = new CategoryBLL();
         //para cuando se actualiza una categoría
         public CategoryDetailDTO detail = new CategoryDetailDTO();
         public bool isUpdate = false;
+        #endregion
+
+        #region Eventos
+        private void FrmCategory_Load(object sender, EventArgs e)
+        {
+            if (isUpdate)
+            {
+                txtCategoryName.Text = detail.CategoryName;
+            }
+        }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
@@ -36,7 +42,7 @@ namespace StockTacking
                 MessageBox.Show("El nombre de la categoría esta vacio");
             else
             {   //para añadir nuevo
-                if (!isUpdate) 
+                if (!isUpdate)
                 {
                     CategoryDetailDTO category = new CategoryDetailDTO();
                     category.CategoryName = txtCategoryName.Text;
@@ -49,7 +55,7 @@ namespace StockTacking
                 else if (isUpdate)
                 {
                     //en caso de que no haga cambios en el texto
-                    if (detail.CategoryName== txtCategoryName.Text.Trim())
+                    if (detail.CategoryName == txtCategoryName.Text.Trim())
                     {
                         MessageBox.Show("No se realizo ningún cambio");
                     }
@@ -67,12 +73,10 @@ namespace StockTacking
             }
         }
 
-        private void FrmCategory_Load(object sender, EventArgs e)
+        private void btnClose_Click(object sender, EventArgs e)
         {
-            if (isUpdate)
-            {
-                txtCategoryName.Text = detail.CategoryName;
-            }
+            this.Close();
         }
+        #endregion        
     }
 }

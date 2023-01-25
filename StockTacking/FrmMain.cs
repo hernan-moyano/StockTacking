@@ -17,12 +17,13 @@ namespace StockTacking
             InitializeComponent();
         }
 
+        #region Eventos
         private void btnSales_Click(object sender, EventArgs e)
         {
             FrmSalesList frm = new FrmSalesList();
             this.Hide();
             frm.ShowDialog();
-            this.Visible= true;
+            this.Visible = true;
         }
 
         private void btnProduct_Click(object sender, EventArgs e)
@@ -74,5 +75,7 @@ namespace StockTacking
         {
             Application.Exit();
         }
+        #endregion
+
     }
 }

@@ -19,21 +19,14 @@ namespace StockTacking
             InitializeComponent();
         }
 
-        private void txtStock_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = General.isNumber(e);
-        }
-
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
+        #region Propiedades
         ProductBLL bll = new ProductBLL();
         ProductDTO dto = new ProductDTO();
         bool comboFull = false;
         ProductDetailDTO detail = new ProductDetailDTO();
+        #endregion
 
+        #region Eventos
         private void FrmAddStock_Load(object sender, EventArgs e)
         {
             dto = bll.Select();
@@ -50,20 +43,26 @@ namespace StockTacking
             dataGridView1.Columns[3].HeaderText = "Categoría";
             dataGridView1.Columns[4].HeaderText = "Stock";
             dataGridView1.Columns[5].HeaderText = "Precio";
+            dataGridView1.Columns[6].Visible = false;
 
-            if(dto.Categories.Count > 0)
+            if (dto.Categories.Count > 0)
             {
                 comboFull = true;
             }
         }
 
+        private void txtStock_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = General.isNumber(e);
+        }
+
         private void cmbCategory_SelectedIndexChanged(object sender, EventArgs e)
-        {           
+        {
             if (comboFull)
             {
                 List<ProductDetailDTO> list = dto.Products;
                 list = list.Where(x => x.CategoryID == Convert.ToInt32(cmbCategory.SelectedValue)).ToList();
-                dataGridView1.DataSource=list;
+                dataGridView1.DataSource = list;
                 if (list.Count == 0)
                 {
                     txtPrice.Clear();
@@ -87,7 +86,7 @@ namespace StockTacking
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (txtProductName.Text.Trim()=="")
+            if (txtProductName.Text.Trim() == "")
             {
                 MessageBox.Show("Por favor, seleccione un producto de la tabla");
             }
@@ -110,5 +109,12 @@ namespace StockTacking
                 }
             }
         }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        #endregion   
     }
 }

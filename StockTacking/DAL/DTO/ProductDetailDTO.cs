@@ -20,5 +20,8 @@ namespace StockTacking.DAL.DTO
 
         public decimal Price { get; set; }
 
+        //variable que no esta en base de datos
+        public bool isCategoryDeleted { get; set; }
+
     }
 }

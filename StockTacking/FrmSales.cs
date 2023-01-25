@@ -21,23 +21,15 @@ namespace StockTacking
             InitializeComponent();
         }
 
-        private void textProductSalesAmount_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = General.isNumber(e);
-        }
-
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
+        #region Propiedades
         SalesBLL bll = new SalesBLL();
         public SalesDTO dto = new SalesDTO();
         public SalesDetailDTO detail = new SalesDetailDTO();
-        
         bool comboFull = false;
         public bool isUpdate = false;
+        #endregion
 
+        #region Eventos
         private void FrmSales_Load(object sender, EventArgs e)
         {
             //carga del combo de categorias en cmb
@@ -74,7 +66,8 @@ namespace StockTacking
                     txtPrice.Text = detail.Price.ToString();
                     txtProductSalesAmount.Text = detail.SalesAmount.ToString();
                     //para obtener la cantidad del producto
-
+                    ProductDetailDTO product = dto.Products.First(x => x.ProductID == detail.ProductID);
+                    detail.StockAmount = product.StockAmount;
                     txtStock.Text = detail.StockAmount.ToString();
                 }
                 catch (Exception ex)
@@ -86,6 +79,10 @@ namespace StockTacking
             }
         }
 
+        private void textProductSalesAmount_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = General.isNumber(e);
+        }
 
         private void cmbCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -117,7 +114,6 @@ namespace StockTacking
             }
         }
 
-
         private void gridProduct_RowEnter(object sender, DataGridViewCellEventArgs e)
         {   //se obtienen los valores de la tabla            
             detail.ProductID = (int)gridProduct.Rows[e.RowIndex].Cells[0].Value;
@@ -140,7 +136,6 @@ namespace StockTacking
             txtCustomerName.Text = detail.CustomerName;
 
         }
-
 
         private void btnSave_Click(object sender, EventArgs e)
         {
@@ -215,5 +210,11 @@ namespace StockTacking
                 }
             }
         }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        #endregion
     }
 }

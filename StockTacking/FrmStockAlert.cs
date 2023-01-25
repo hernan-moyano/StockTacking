@@ -19,16 +19,13 @@ namespace StockTacking
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            FrmMain frm = new FrmMain();
-            this.Hide();
-            frm.ShowDialog();
-        }
-
+        #region Propiedades
         ProductBLL bll = new ProductBLL();
         ProductDTO dto = new ProductDTO();
         int stockCritico = 10;
+        #endregion
+
+        #region Eventos
         private void FrmStockAlert_Load(object sender, EventArgs e)
         {
             dto = bll.Select();
@@ -41,13 +38,22 @@ namespace StockTacking
             dataGridView1.Columns[3].HeaderText = "Categoría";
             dataGridView1.Columns[4].HeaderText = "Stock";
             dataGridView1.Columns[5].HeaderText = "Precio";
+            dataGridView1.Columns[6].Visible = false;
             //si no hay productos con stock critico se va a la pantalla principal
-            if (dto.Products.Count==0)
+            if (dto.Products.Count == 0)
             {
                 FrmMain frm = new FrmMain();
                 this.Hide();
                 frm.ShowDialog();
             }
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            FrmMain frm = new FrmMain();
+            this.Hide();
+            frm.ShowDialog();
+        }
+        #endregion
     }
 }

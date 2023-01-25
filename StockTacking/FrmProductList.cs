@@ -16,46 +16,35 @@ namespace StockTacking
 {
     public partial class FrmProductList : Form
     {
-        ProductBLL bll = new ProductBLL();
-        ProductDTO dto = new ProductDTO();
-
         public FrmProductList()
         {
             InitializeComponent();
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
+        #region Propiedades
+        ProductBLL bll = new ProductBLL();
+        ProductDTO dto = new ProductDTO();
+        public ProductDetailDTO detail = new ProductDetailDTO();
+        #endregion
 
-        private void txtPrice_KeyPress(object sender, KeyPressEventArgs e)
+        #region Metodos
+        private void CleanFilters()
         {
-            //e.Handled = General.isNumber(e);
-            if (!General.isDecimal(e.KeyChar, txtPrice.Text))
-                e.Handled = true;
-        }
-
-        private void txtStock_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = General.isNumber(e);
-        }
-
-        private void btnAdd_Click(object sender, EventArgs e)
-        {
-            FrmProduct frm = new FrmProduct();
-            frm.dto = dto;
-            this.Hide();
-            frm.ShowDialog();
-            this.Visible = true;
-            //para refrescar despues de haber añadido uno nuevo
-            dto = bll.Select();
+            txtProductName.Clear();
+            cmbCategory.SelectedIndex = -1;
+            txtPrice.Clear();
+            rbPriceEquals.Checked = false;
+            rbPriceMore.Checked = false;
+            rbPriceLess.Checked = false;
+            txtStock.Clear();
+            rbStockEquals.Checked = false;
+            rbStockMore.Checked = false;
+            rbStockLess.Checked = false;
             dataGridView1.DataSource = dto.Products;
-            //se limpian los filtros de busqueda
-            CleanFilters();
         }
+        #endregion
 
-
+        #region Eventos
         private void FrmProductList_Load(object sender, EventArgs e)
         {
             dto = bll.Select();
@@ -71,6 +60,7 @@ namespace StockTacking
             dataGridView1.Columns[3].HeaderText = "Categoría";
             dataGridView1.Columns[4].HeaderText = "Stock";
             dataGridView1.Columns[5].HeaderText = "Precio";
+            dataGridView1.Columns[6].Visible = false;
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
@@ -115,22 +105,17 @@ namespace StockTacking
             CleanFilters();
         }
 
-        private void CleanFilters()
+        private void txtPrice_KeyPress(object sender, KeyPressEventArgs e)
         {
-            txtProductName.Clear();
-            cmbCategory.SelectedIndex = -1;
-            txtPrice.Clear();
-            rbPriceEquals.Checked = false;
-            rbPriceMore.Checked = false;
-            rbPriceLess.Checked = false;
-            txtStock.Clear();
-            rbStockEquals.Checked = false;
-            rbStockMore.Checked = false;
-            rbStockLess.Checked = false;
-            dataGridView1.DataSource = dto.Products;
+            //e.Handled = General.isNumber(e);
+            if (!General.isDecimal(e.KeyChar, txtPrice.Text))
+                e.Handled = true;
         }
 
-        public ProductDetailDTO detail = new ProductDetailDTO();
+        private void txtStock_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = General.isNumber(e);
+        }
 
         private void dataGridView1_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
@@ -141,6 +126,20 @@ namespace StockTacking
             //detail.CategoryName = dataGridView1.Rows[e.RowIndex].Cells[3].Value.ToString();
             //detail.StockAmount = (int)dataGridView1.Rows[e.RowIndex].Cells[4].Value;
             detail.Price = (decimal)dataGridView1.Rows[e.RowIndex].Cells[5].Value;
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            FrmProduct frm = new FrmProduct();
+            frm.dto = dto;
+            this.Hide();
+            frm.ShowDialog();
+            this.Visible = true;
+            //para refrescar despues de haber añadido uno nuevo
+            dto = bll.Select();
+            dataGridView1.DataSource = dto.Products;
+            //se limpian los filtros de busqueda
+            CleanFilters();
         }
 
         private void btnUpdate_Click(object sender, EventArgs e)
@@ -167,7 +166,7 @@ namespace StockTacking
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            if (detail.ProductID==0)
+            if (detail.ProductID == 0)
             {
                 MessageBox.Show("Por favor selecciona un producto de la tabla");
             }
@@ -188,5 +187,11 @@ namespace StockTacking
                 }
             }
         }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        #endregion
     }
 }

@@ -11,28 +11,16 @@ namespace StockTacking.BLL
 {
     public class ProductBLL : IBLL<ProductDetailDTO, ProductDTO>
     {
+        #region Propiedades
         CategoryDAO categoryDao = new CategoryDAO();
         ProductDAO dao = new ProductDAO();
         SalesDAO salesdao = new SalesDAO();
-        public bool Delete(ProductDetailDTO entity)
-        {
-            PRODUCT product = new PRODUCT();
-            product.ID = entity.ProductID;
-            dao.Delete(product);
-            SALE sales = new SALE();
-            sales.ProductID = entity.ProductID;
-            salesdao.Delete(sales);
-            return true;
-        }
+        #endregion
 
-        public bool GetBack(ProductDetailDTO entity)
-        {
-            return dao.GetBack(entity.ProductID);
-        }
-
+        #region Metodos
         public bool Insert(ProductDetailDTO entity)
         {
-            PRODUCT product = new PRODUCT();            
+            PRODUCT product = new PRODUCT();
             product.CategoryID = entity.CategoryID;
             product.ProductName = entity.ProductName;
             product.Price = entity.Price;
@@ -59,5 +47,22 @@ namespace StockTacking.BLL
             product.Price = entity.Price;
             return dao.Update(product);
         }
+
+        public bool Delete(ProductDetailDTO entity)
+        {
+            PRODUCT product = new PRODUCT();
+            product.ID = entity.ProductID;
+            dao.Delete(product);
+            SALE sales = new SALE();
+            sales.ProductID = entity.ProductID;
+            salesdao.Delete(sales);
+            return true;
+        }
+
+        public bool GetBack(ProductDetailDTO entity)
+        {
+            return dao.GetBack(entity.ProductID);
+        }
+        #endregion
     }
 }

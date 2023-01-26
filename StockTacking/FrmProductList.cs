@@ -123,8 +123,8 @@ namespace StockTacking
             detail.ProductID = (int)dataGridView1.Rows[e.RowIndex].Cells[0].Value;
             detail.CategoryID = (int)dataGridView1.Rows[e.RowIndex].Cells[1].Value;
             detail.ProductName = dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString();
-            //detail.CategoryName = dataGridView1.Rows[e.RowIndex].Cells[3].Value.ToString();
-            //detail.StockAmount = (int)dataGridView1.Rows[e.RowIndex].Cells[4].Value;
+            detail.CategoryName = dataGridView1.Rows[e.RowIndex].Cells[3].Value.ToString();
+            detail.StockAmount = (int)dataGridView1.Rows[e.RowIndex].Cells[4].Value;
             detail.Price = (decimal)dataGridView1.Rows[e.RowIndex].Cells[5].Value;
         }
 
@@ -151,8 +151,9 @@ namespace StockTacking
             else
             {
                 FrmProduct frm = new FrmProduct();
-                frm.detail = detail;
                 frm.isUpdate = true;
+                frm.detail = detail;
+                frm.dto= dto;
                 this.Hide();
                 frm.ShowDialog();
                 this.Visible = true;

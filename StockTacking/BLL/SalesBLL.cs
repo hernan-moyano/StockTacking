@@ -36,6 +36,7 @@ namespace StockTacking.BLL
             //se corrige el stock
             PRODUCT product = new PRODUCT();
             product.ID = entity.ProductID;
+            //todo: no llega el stock amount            
             int temp = entity.StockAmount - entity.SalesAmount;
             product.StockAmount = temp;
             productdao.Update(product);

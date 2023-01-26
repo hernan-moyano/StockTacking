@@ -106,6 +106,7 @@ namespace StockTacking
                 productDetail.ProductID = (int)dataGridView1.Rows[e.RowIndex].Cells[0].Value;
                 productDetail.CategoryID = (int)dataGridView1.Rows[e.RowIndex].Cells[1].Value;
                 productDetail.ProductName = dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString();
+                productDetail.StockAmount = (int)dataGridView1.Rows[e.RowIndex].Cells[4].Value;
                 productDetail.Price = (decimal)dataGridView1.Rows[e.RowIndex].Cells[5].Value;
                 productDetail.isCategoryDeleted = (bool)dataGridView1.Rows[e.RowIndex].Cells[6].Value;
             }
@@ -125,6 +126,7 @@ namespace StockTacking
                     salesDetail.ProductID = (int)dataGridView1.Rows[e.RowIndex].Cells[4].Value;
                     salesDetail.SalesAmount = (int)dataGridView1.Rows[e.RowIndex].Cells[6].Value;
                     salesDetail.Price = (decimal)dataGridView1.Rows[e.RowIndex].Cells[7].Value;
+                    salesDetail.StockAmount = (int)dataGridView1.Rows[e.RowIndex].Cells[9].Value;
                     salesDetail.SalesID = (int)dataGridView1.Rows[e.RowIndex].Cells[10].Value;
                     salesDetail.isCategoryDeleted = (bool)dataGridView1.Rows[e.RowIndex].Cells[11].Value;
                     salesDetail.isCustomerDeleted = (bool)dataGridView1.Rows[e.RowIndex].Cells[12].Value;
